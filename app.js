@@ -1,127 +1,103 @@
 require('dotenv').config();
-
 const express = require('express');
-const app = express();
-const cookieParser = require('cookie-parser');
-const path = require('path');
+const cors = require('cors');
+const crypto = require('crypto');
 const connectDB = require('./config/db');
-const session = require('express-session');
-const Complaint = require('./models/complaint-model');
-const User = require('./models/user-model');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const Telemetry = require('./models/telemetry-model');
+const User = require('./models/user-models');
 
+const app = express();
+
+// Middleware
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(session({
-    secret: 'civicconnect',
-    resave: false,
-    saveUninitialized: true
-}));
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('view engine', 'ejs');
+// --- Helper: Blockchain Hashing Function ---
+const generateBlockHash = async (newTemp) => {
+    const lastEntry = await Telemetry.findOne().sort({ _id: -1 });
+    const prevHash = lastEntry ? lastEntry.block_hash : "GENESIS_HASH";
+    // Chain complexity: Hash(Previous Hash + Current Temperature)
+    return crypto.createHash('sha256').update(prevHash + newTemp).digest('hex');
+};
 
-app.get('/', (req, res) => res.render('home'));
-app.get('/login', (req, res) => res.render('login'));
-app.get('/signup', (req, res) => res.render('signup'));
-app.get('/deshboard', (req, res) => res.render('deshboard'));
-app.get('/user', (req, res) => res.render('user'));
-app.get('/supplier', (req, res) => res.render('supplier'));
+// --- API Routes ---
 
-app.post('/report/classify', async (req, res) => {
-    const { complaint, lat, lng } = req.body;
+// 1. Ingestion API: IoT Telemetry
+app.post('/api/telemetry', async (req, res) => {
     try {
-        const pyRes = await fetch('https://aerocool-os.onrender.com/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ complaint })
-        });
-        const result = await pyRes.json();
-        console.log('CLASSIFIER RESULT:', JSON.stringify(result));
+        const { temperature, battery_level, power_source } = req.body;
+        const block_hash = await generateBlockHash(temperature);
 
-        const ticketId = 'CIV' + Math.floor(1000 + Math.random() * 9000);
-
-        await Complaint.create({
-            complaint,
-            department: result.department,
-            category: result.category,
-            priority: result.priority,
-            summary: result.summary,
-            lat: parseFloat(lat) || 0,
-            lng: parseFloat(lng) || 0,
-            ticketId
+        const log = await Telemetry.create({
+            temperature,
+            battery_level,
+            power_source,
+            block_hash
         });
 
-        req.session.result = { ...result, complaint, lat, lng, ticketId };
-        if (!req.session.complaints) req.session.complaints = [];
-        req.session.complaints.push(req.session.result);
+        if (temperature > 8) {
+            console.log(`⚠️ ALERT: Thermal Breach! Current Temp: ${temperature}°C`);
+        }
 
-        res.json({ ...result, ticketId });
-
-    } catch (error) {
-        console.error('CLASSIFY ERROR:', error);
-        res.status(500).json({ error: 'Classifier unavailable' });
-    }
-});
-
-app.get('/status', (req, res) => {
-    const result = req.session.result;
-    if (!result) return res.redirect('/report');
-    res.render('status', { result });
-});
-
-app.get('/api/complaints', async (req, res) => {
-    try {
-        const complaints = await Complaint.find({}, 'complaint department category priority summary lat lng ticketId createdAt');
-        res.json(complaints);
+        res.status(201).json({ success: true, log });
     } catch (err) {
-        res.status(500).json({ error: 'Could not fetch complaints' });
+        res.status(500).json({ error: err.message });
     }
 });
 
-app.post('/signup', async (req, res) => {
-    const { name, email, password, role } = req.body;
+// 2. Auth: Signup Route
+app.post('/api/signup', async (req, res) => {
     try {
-        const existing = await User.findOne({ email });
-        if (existing) return res.status(400).json({ error: 'Email already registered' });
+        const { name, email, password, role } = req.body;
+
+        // Check if user already exists
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "User with this email already exists" });
+        }
+
         const user = await User.create({ name, email, password, role });
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, { httpOnly: true });
-        res.json({ success: true });
+
+        res.status(201).json({ 
+            success: true, 
+            message: "Node registered successfully",
+            user: { id: user._id, name: user.name, role: user.role } 
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+// 3. Auth: Login Route
+app.post('/api/login', async (req, res) => {
     try {
+        const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) return res.status(401).json({ error: 'Invalid credentials' });
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, { httpOnly: true });
-        res.json({ success: true });
+
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            user: { name: user.name, role: user.role } 
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+// 4. Dashboard API: Fetch logs
+app.get('/api/logs/latest', async (req, res) => {
+    try {
+        const latestLogs = await Telemetry.find().sort({ _id: -1 }).limit(10);
+        res.json(latestLogs);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch logs" });
     }
 });
 
 const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-    try {
-        await connectDB();
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error('Failed to start server:', error.message);
-        process.exit(1);
-    }
-};
-
-startServer();
+connectDB().then(() => {
+    app.listen(PORT, () => console.log(`❄️ Cold Chain Server live on port ${PORT}`));
+});

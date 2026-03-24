@@ -1,41 +1,49 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/ybit-hackathon');
 
-
 const bcrypt = require('bcrypt');
-const user = new mongoose.Schema({
+
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Name is required'],
         trim: true
     },
     email: {
         type: String,
-        required: true,
-        unique: true,
+        required: [true, 'Email is required'],
+        unique: true, // Prevents duplicate accounts
         lowercase: true,
-        trim: true
-    },
-    phone: {
-        type: String,
-        trim: true
-    },
-    location: {
-        type: String,
         trim: true
     },
     password: {
         type: String,
-        required: true
+        required: [true, 'Password is required'],
+        minlength: 6
+    },
+    role: {
+        type: String,
+        enum: ['user', 'supplier'], // Restricts to these two roles
+        default: 'user'
     }
-}, { timestamps: true });
+}, { timestamps: true }); // Automatically adds createdAt and updatedAt fields
+
+// --- Middleware: Hash password before saving to DB ---
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
+    
     try {
-        this.password = await bcrypt.hash(this.password, 10);
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
         next();
     } catch (err) {
         next(err);
     }
 });
-module.exports = mongoose.models.User || mongoose.model('User', userSchema);
+
+// --- Method: Compare password for Login ---
+userSchema.methods.comparePassword = async function(candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+};
+
+module.exports = mongoose.model('User', userSchema);

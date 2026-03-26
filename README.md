@@ -1,1 +1,89 @@
-AeroCool OS (Smart Cold-Chain Command Center)AeroCool OS is a "Smart Brain" and cloud infrastructure developed for the Smart Active Cold Chain Box. While the hardware physically maintains the required $2-8^{\circ}C$ temperature for sensitive biomedical materials, this software acts as the critical command center to ensure zero medical wastage during remote transport.The project was built during the Quantxera 2K26 Hackathon at YBIT Sawantwadi, placing 4th out of 40+ competing teams.🚀 The Technical ChallengeMedical supply chain integrity traditionally relies on "blind trust" via outdated, reactive USB data loggers. AeroCool OS solves the Web3 scalability problem by implementing Exception-Based Logging. Routine data remains free in a standard database, while critical thermal breaches are permanently locked onto the Ethereum Blockchain via Solidity Smart Contracts.✨ Key FeaturesHybrid Web3 Architecture: Uses Web3.py to execute smart contracts only during critical state changes, keeping operational costs near zero while providing an indisputable audit trail.Real-Time IoT Telemetry: Tracks internal temperature, battery lifecycle, and power source (Solar vs. Battery).Edge Caching: Built-in logic to handle 4G dead zones; the system caches telemetry locally and bulk-syncs data once a connection is restored to ensure no gaps in the audit trail.Proactive Excursion Alerts: Detects thermal breaches (e.g., $> 8^{\circ}C$) and instantly triggers GSM-simulated SMS alerts via the Twilio API.Supervisor Dashboard: A React-based cloud interface for real-time monitoring and visualization of the cold box's live status.🛠️ Technical StackFrontend: React, TailwindCSS, Recharts.Backend: Node.js, Express, Python FastAPI.Database: MongoDB.Web3: Solidity, Web3.py, Ganache / Ethereum.Alerts & IoT: Twilio API, Python (Requests/Random).🌍 SDG AlignmentSDG 3 (Good Health & Well-being): Mathematically guaranteeing the safe delivery of life-saving vaccines and medicines.SDG 7 (Affordable & Clean Energy): Actively monitoring and promoting the use of solar versus battery power.
+AeroCool OS ❄️
+
+AeroCool OS is an intelligent software command center designed for the Smart Active Cold Chain Box[cite: 6, 270]. [cite_start]It ensures the integrity of life-saving medical supplies during transit by combining real-time IoT monitoring with a **Hybrid Web3 Architecture** for immutable data logging[cite: 11, 20, 37].
+
+Developed during the **Quantxera 2K26 Hackathon**, placing **4th out of 40+ teams**.
+
+## 🎯 What This Project Does
+
+AeroCool OS transforms traditional medical logistics into a proactive, zero-trust system:
+
+* [cite_start]**Real-time IoT Telemetry**: Monitors internal temperature ($2-8^{\circ}C$), battery lifecycle, and solar power status[cite: 13, 212].
+* [cite_start]**Hybrid Web3 Logging**: Routine data is stored in a standard database to save costs, while critical thermal breaches are permanently minted onto the **Ethereum Blockchain** via **Solidity Smart Contracts**[cite: 25, 29, 30].
+* [cite_start]**Proactive Excursion Alerts**: Instantly triggers **Twilio SMS** alerts to supervisors if a temperature spike is detected[cite: 14, 284].
+* [cite_start]**Edge Caching**: Implements local caching for 4G dead zones, ensuring zero data gaps by bulk-syncing once connectivity is restored[cite: 34, 35].
+
+## 🏗️ Project Architecture
+
+```text
+AeroCool-OS/
+├── aerocool_sim/         # Python IoT Edge Simulator
+│   └── simulator.py      # Generates temp/battery/solar telemetry
+├── aerocool-ui/          # React Frontend (Supervisor Dashboard)
+│   └── src/components/   # Live charts and status widgets
+├── backend/              # Node.js & FastAPI Hybrid Backend
+│   ├── app.js            # Node/Express logic
+│   └── main.py           # FastAPI Web3/Blockchain integration
+├── config/               # Database and API configurations
+├── models/               # MongoDB/PostgreSQL schemas
+└── contracts/            # Solidity Smart Contracts
+```
+
+## 🛠️ Technical Stack
+
+* [cite_start]**Frontend**: React, TailwindCSS, Recharts[cite: 12, 53, 54].
+* [cite_start]**Backend**: Node.js, Express, Python FastAPI[cite: 61, 66, 154].
+* [cite_start]**Database**: MongoDB, PostgreSQL[cite: 25, 65].
+* [cite_start]**Web3**: Solidity, Web3.py, Ganache/Ethereum[cite: 29, 61, 63].
+* [cite_start]**Integrations**: Twilio API for GSM alerts[cite: 69, 81].
+
+## 🚀 How to Run the Application
+
+### Prerequisites
+* **Python 3.8+**
+* **Node.js 16+ & npm**
+* **Ganache** (For local blockchain testing)
+
+### 1. Backend Setup (FastAPI & Node)
+```bash
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+pip install -r requirements.txt
+npm install
+
+# Start the FastAPI server
+uvicorn main:app --reload --port 8000
+```
+
+### 2. Frontend Setup (React)
+```bash
+# Navigate to UI directory
+cd aerocool-ui
+
+# Install dependencies
+npm install
+
+# Start the dashboard
+npm start
+```
+
+### 3. IoT Simulator
+```bash
+# Start the telemetry simulation
+python aerocool_sim/simulator.py
+```
+
+## 🌍 SDG Alignment
+
+* [cite_start]**SDG 3 (Good Health)**: Guaranteeing safe delivery of vaccines to improve health service efficiency[cite: 38, 222].
+* [cite_start]**SDG 7 (Clean Energy)**: Actively monitoring and promoting solar power usage for remote cooling[cite: 38, 222].
+
+---
+[cite_start]**The Team: Kasukabe Defence Force** [cite: 6, 189]
+* Al-hamd Jahan
+* Anurag
+* Sahilyc12
+
+Would you like me to help you refine the **Technical Setup** section with the specific environment variables needed for your Twilio and Ganache integration?

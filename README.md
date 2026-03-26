@@ -1,6 +1,6 @@
-AeroCool OS ❄️
+# AeroCool OS ❄️
 
-AeroCool OS is an intelligent software command center designed for the Smart Active Cold Chain Box. It ensures the integrity of life-saving medical supplies during transit by combining real-time IoT monitoring with a **Hybrid Web3 Architecture** for immutable data logging.
+**AeroCool OS** is an intelligent software command center designed for the Smart Active Cold Chain Box. It ensures the integrity of life-saving medical supplies during transit by combining real-time IoT monitoring with a **Hybrid Web3 Architecture** for immutable data logging.
 
 Developed during the **Quantxera 2K26 Hackathon**, placing **4th out of 40+ teams**.
 
@@ -8,10 +8,10 @@ Developed during the **Quantxera 2K26 Hackathon**, placing **4th out of 40+ team
 
 AeroCool OS transforms traditional medical logistics into a proactive, zero-trust system:
 
-* [cite_start]**Real-time IoT Telemetry**: Monitors internal temperature ($2-8^{\circ}C$), battery lifecycle, and solar power status[cite: 13, 212].
-* [cite_start]**Hybrid Web3 Logging**: Routine data is stored in a standard database to save costs, while critical thermal breaches are permanently minted onto the **Ethereum Blockchain** via **Solidity Smart Contracts**[cite: 25, 29, 30].
-* [cite_start]**Proactive Excursion Alerts**: Instantly triggers **Twilio SMS** alerts to supervisors if a temperature spike is detected[cite: 14, 284].
-* [cite_start]**Edge Caching**: Implements local caching for 4G dead zones, ensuring zero data gaps by bulk-syncing once connectivity is restored[cite: 34, 35].
+* **Real-time IoT Telemetry**: Monitors internal temperature ($2-8^{\circ}C$), battery lifecycle, and solar power status.
+* **Hybrid Web3 Logging**: Routine data is stored in a standard database to save costs, while critical thermal breaches are permanently minted onto the **Ethereum Blockchain** via **Solidity Smart Contracts**.
+* **Proactive Excursion Alerts**: Instantly triggers **Twilio SMS** alerts to supervisors if a temperature spike is detected.
+* **Edge Caching**: Implements local caching for 4G dead zones, ensuring zero data gaps by bulk-syncing once connectivity is restored.
 
 ## 🏗️ Project Architecture
 

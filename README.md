@@ -31,11 +31,11 @@ AeroCool-OS/
 
 ## 🛠️ Technical Stack
 
-* [cite_start]**Frontend**: React, TailwindCSS, Recharts[cite: 12, 53, 54].
-* [cite_start]**Backend**: Node.js, Express, Python FastAPI[cite: 61, 66, 154].
-* [cite_start]**Database**: MongoDB, PostgreSQL[cite: 25, 65].
-* [cite_start]**Web3**: Solidity, Web3.py, Ganache/Ethereum[cite: 29, 61, 63].
-* [cite_start]**Integrations**: Twilio API for GSM alerts[cite: 69, 81].
+* **Frontend**: React, TailwindCSS, Recharts.
+* **Backend**: Node.js, Express, Python FastAPI.
+* **Database**: MongoDB.
+* **Web3**: Solidity, Web3.py, Ganache/Ethereum.
+* **Integrations**: Twilio API for GSM alerts.
 
 ## 🚀 How to Run the Application
 
@@ -77,13 +77,9 @@ python aerocool_sim/simulator.py
 
 ## 🌍 SDG Alignment
 
-* [cite_start]**SDG 3 (Good Health)**: Guaranteeing safe delivery of vaccines to improve health service efficiency[cite: 38, 222].
-* [cite_start]**SDG 7 (Clean Energy)**: Actively monitoring and promoting solar power usage for remote cooling[cite: 38, 222].
+* **SDG 3 (Good Health)**: Guaranteeing safe delivery of vaccines to improve health service efficiency.
+* **SDG 7 (Clean Energy)**: Actively monitoring and promoting solar power usage for remote cooling.
 
 ---
-[cite_start]**The Team: Kasukabe Defence Force** [cite: 6, 189]
-* Al-hamd Jahan
-* Anurag
-* Sahilyc12
 
 Would you like me to help you refine the **Technical Setup** section with the specific environment variables needed for your Twilio and Ganache integration?

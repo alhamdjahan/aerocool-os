@@ -1,6 +1,6 @@
 AeroCool OS ❄️
 
-AeroCool OS is an intelligent software command center designed for the Smart Active Cold Chain Box[cite: 6, 270]. [cite_start]It ensures the integrity of life-saving medical supplies during transit by combining real-time IoT monitoring with a **Hybrid Web3 Architecture** for immutable data logging[cite: 11, 20, 37].
+AeroCool OS is an intelligent software command center designed for the Smart Active Cold Chain Box. It ensures the integrity of life-saving medical supplies during transit by combining real-time IoT monitoring with a **Hybrid Web3 Architecture** for immutable data logging.
 
 Developed during the **Quantxera 2K26 Hackathon**, placing **4th out of 40+ teams**.
 

@@ -1,2 +1,26 @@
-node_modules
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.DS_Store
+
+# Environment / Secrets
 .env
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+build/
+*.local
+
+# Python specifics
+__pycache__/
+*.py[cod]
+*$py.class

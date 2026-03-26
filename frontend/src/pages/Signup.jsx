@@ -20,8 +20,8 @@ export default function Signup() {
     setError("");
 
     try {
-      // Sending data to your Express backend (Port 3000)
-      const response = await fetch("http://localhost:3000/api/signup", {
+      // Corrected to Port 8000 to match your app.js and aerocool_sim.py
+      const response = await fetch("http://localhost:8000/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,6 +34,7 @@ export default function Signup() {
       if (response.ok) {
         // Registration successful!
         alert("Node registered successfully!");
+        // Logic for role-based lane selection [cite: 3]
         navigate(role === "supplier" ? "/supplier" : "/user");
       } else {
         // Server returned an error (e.g., User already exists)
@@ -41,7 +42,7 @@ export default function Signup() {
       }
     } catch (err) {
       // Network or Server is down
-      setError("Server is unreachable. Make sure your backend is running on port 3000.");
+      setError("Server unreachable. Ensure 'node app.js' is running on port 8000.");
     } finally {
       setLoading(false);
     }
@@ -49,7 +50,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center font-sans relative overflow-hidden">
-      {/* Background Glow */}
+      {/* AeroCool Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="relative z-10 bg-slate-900/80 backdrop-blur-xl border border-slate-700 p-10 rounded-2xl shadow-2xl w-full max-w-md my-8">
